@@ -12,8 +12,14 @@ RUN cd / && wget -q http://dl.google.com/android/android-sdk_r${ANDROID_SDK_VER}
 RUN tar -xf android-sdk_r${ANDROID_SDK_VER}-linux.tgz \
  && mv android-sdk-linux /usr/local/android-sdk-linux-r${ANDROID_SDK_VER} \
  && rm -rf /android-sdk_r${ANDROID_SDK_VER}-linux.tgz
-ENV ANDROID_HOME /usr/local/android-sdk-linux-${ANDROID_SDK_VER}
+ENV ANDROID_HOME /usr/local/android-sdk-linux-r${ANDROID_SDK_VER}
 ENV PATH $PATH:${ANDROID_HOME}/tools
+
+# Install android components
+ENV ANDROID_COMPONENTS platform-tools,build-tools-23.2.1,android-23
+ENV GOOGLE_COMPONENTS extra-android-m2repository,extra-google-m2repository
+RUN echo y | android update sdk --no-ui --all --filter "${ANDROID_COMPONENTS}" ; \
+    echo y | android update sdk --no-ui --all --filter "${GOOGLE_COMPONENTS}"
 ENV PATH $PATH:${ANDROID_HOME}/platform-tools
 
 # Install android ndk
